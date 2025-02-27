@@ -6,7 +6,7 @@
       :options="option"
     />
     <div class="formContainer">
-        <h3>企业门户网站管理系统</h3>
+      <h3>企业门户网站管理系统</h3>
       <el-form
         ref="loginFormRef"
         :model="loginForm"
@@ -16,10 +16,7 @@
         class="loginform"
       >
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="loginForm.username"
-            autocomplete="off"
-          ></el-input>
+          <el-input v-model="loginForm.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input
@@ -29,8 +26,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm()"
-            >登入</el-button>
+          <el-button type="primary" @click="submitForm()">登入</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -38,9 +34,10 @@
 </template>
 
 <script setup>
-import {reactive,ref} from "vue"
-import {useRouter} from "vue-router"
-import axios from "axios"
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import axios from "axios";
+import { ElMessage } from 'element-plus'
 
 const particlesLoaded = async (container) => {
   console.log("Particles container loaded", container);
@@ -48,36 +45,42 @@ const particlesLoaded = async (container) => {
 };
 
 const loginForm = reactive({
-    username:"",
-    password:""
-})
+  username: "",
+  password: "",
+});
 
-const loginFormRef = ref()
+const loginFormRef = ref();
 
 const loginRules = reactive({
-    username:[
-        {
-            required:true,message:"请输入用户名",trigger:"blur"
-        },
-        {
-            required:true,message:"请输入密码",trigger:"blur"
-        }
-    ]
-})
+  username: [
+    {
+      required: true,
+      message: "请输入用户名",
+      trigger: "blur",
+    },
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "blur",
+    },
+  ],
+});
 
-const router = useRouter()
+const router = useRouter();
 
-const submitForm = ()=>{
-    loginFormRef.value.validate((valid)=>{
-        if(valid){
-            localStorage.setItem("token","kewin")
-            axios.get("/users").then(res=>{
-                console.log(res.data);
-            })
-            router.push("/index")
+const submitForm = () => {
+  loginFormRef.value.validate((valid) => {
+    if (valid) {
+      axios.post("/adminapi/user/login", loginForm).then((res) => {
+        if (res.data.ActiveType === "OK") {
+          router.push("/index");
+        }else{
+          ElMessage.error('用户名和密码不匹配')
         }
-    })
-}
+      });
+    }
+  });
+};
 
 const option = {
   background: {
@@ -153,28 +156,28 @@ const option = {
 </script>
 
 <style lang="scss" scoped>
-.formContainer{
-    width: 500px;
-    height: 300px;
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    color: white;
-    text-align: center;
-    padding: 20px;
-    background: rgba($color:#000,$alpha:0.5);
+.formContainer {
+  width: 500px;
+  height: 300px;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  padding: 20px;
+  background: rgba($color: #000, $alpha: 0.5);
 
-    h3{
-        font-size: 30px;
-    }
+  h3 {
+    font-size: 30px;
+  }
 
-    .loginform{
-        margin-top: 20px;
-    }
+  .loginform {
+    margin-top: 20px;
+  }
 }
 
-::v-deep .el-form-item__label{
-    color: white;
+::v-deep .el-form-item__label {
+  color: white;
 }
 </style>
