@@ -1,0 +1,4 @@
+vue/db/WiredTiger.lock
+vue/db/WiredTiger.wt
+vue/db/diagnostic.data/metrics.2025-02-26T15-23-36Z-00000
+vue/db/journal/WiredTigerLog.0000000001
