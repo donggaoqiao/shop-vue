@@ -4,7 +4,8 @@ import createPersistedState from "vuex-persistedstate"
 export default createStore({
   state: {
     isGetterRouter:false,
-    isCollapsed:false
+    isCollapsed:false,
+    userInfo:{}
   },
   getters: {
   },
@@ -14,6 +15,15 @@ export default createStore({
     },
     changeCollapsed(state){
       state.isCollapsed = !state.isCollapsed
+    },
+    changeUserInfo(state,value){
+      state.userInfo = {
+        ...state.userInfo,
+        ...value
+      }
+    },
+    clearUserInfo(state,value){
+      state.userInfo = {}
     }
   },
   actions: {
@@ -22,6 +32,6 @@ export default createStore({
   },
   //安装插件控制持久化
   plugins:[createPersistedState({
-    paths:["isCollapsed"]
+    paths:["isCollapsed","userInfo"]
   })]
 })
