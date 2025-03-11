@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-page-header content="添加产品" title="产品管理" icon="" />
+    <el-page-header content="编辑产品" title="产品管理" @back="handleBack()" />
 
     <el-form
       ref="productFormRef"
@@ -26,21 +26,23 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm()">添加产品</el-button>
+        <el-button type="primary" @click="submitForm()">更新产品</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, reactive } from "vue";
+import { computed, ref, reactive,onMounted } from "vue";
 import axios from "axios";
 import { ElMessage } from "element-plus";
 import upload from "@/util/upload";
 import Upload from "@/components/upload/Upload";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute()
+
 const productFormRef = ref();
 const productForm = reactive({
   title: "",
@@ -65,11 +67,26 @@ const handleChange = (file) => {
 const submitForm = () => {
   productFormRef.value.validate(async (valid) => {
     if (valid) {
-      await upload("/adminapi/product/add", productForm);
+      await upload("/adminapi/product/list", productForm);
       router.push(`/product-manage/productlist`);
     }
   });
 };
+
+const handleBack = () => {
+  router.back();
+};
+
+
+onMounted(() => {
+    getData()
+});
+
+const getData = async()=>{
+    const res = await axios.get(`/adminapi/product/list/${route.params.id}`)
+    // console.log(res.data.data[0]);
+    Object.assign(productForm,res.data.data[0])
+}
 </script>
 
 <style lang="scss" scoped>

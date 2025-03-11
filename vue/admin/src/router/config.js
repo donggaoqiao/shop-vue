@@ -4,8 +4,10 @@ import UserAdd from "../views/uesr-manage/UserAdd.vue"
 import UserList from "../views/uesr-manage/UserList.vue"
 import NewsAdd from "../views/news-manage/NewsAdd.vue"
 import NewsList from "../views/news-manage/NewsList.vue"
+import NewsEdit from "../views/news-manage/NewsEdit.vue"
 import ProductAdd from "../views/product-manage/ProductAdd.vue"
 import ProductList from "../views/product-manage/ProductList.vue"
+import ProductEdit from "../views/product-manage/ProductEdit.vue"
 import NotFound from "../views/notfound/NotFound.vue"
 
 
@@ -20,11 +22,13 @@ const routes = [
     },
     {
         path:"/user-manage/adduser",
-        component:UserAdd
+        component:UserAdd,
+        requireAdmin:true
     },
     {
         path:"/user-manage/userlist",
-        component:UserList
+        component:UserList,
+        requireAdmin:true
     },
     {
         path:"/news-manage/addnews",
@@ -35,12 +39,20 @@ const routes = [
         component:NewsList
     },
     {
+        path:"/news-manage/editnews/:id",
+        component:NewsEdit
+    },
+    {
         path:"/product-manage/addproduct",
         component:ProductAdd
     },
     {
         path:"/product-manage/productlist",
         component:ProductList
+    },
+    {
+        path:"/product-manage/editproduct/:id",
+        component:ProductEdit
     },
     {
         path:"/",

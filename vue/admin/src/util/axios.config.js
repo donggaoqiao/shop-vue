@@ -9,7 +9,6 @@ axios.interceptors.request.use(function(config){
 })
 
 axios.interceptors.response.use(function (response) {
-    console.log(response.headers);
     const { authorization } = response.headers
     authorization && localStorage.setItem("token", authorization)
     return response;

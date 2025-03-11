@@ -38,6 +38,10 @@ import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { ElMessage } from 'element-plus'
+import {useStore} from "vuex"
+
+const router = useRouter();
+const store = useStore()
 
 const particlesLoaded = async (container) => {
   console.log("Particles container loaded", container);
@@ -66,13 +70,15 @@ const loginRules = reactive({
   ],
 });
 
-const router = useRouter();
 
 const submitForm = () => {
   loginFormRef.value.validate((valid) => {
     if (valid) {
       axios.post("/adminapi/user/login", loginForm).then((res) => {
         if (res.data.ActiveType === "OK") {
+          // console.log(res.data.data);
+          store.commit("changeUserInfo",res.data.data)
+          store.commit("changeGetterRouter",false)
           router.push("/index");
         }else{
           ElMessage.error('用户名和密码不匹配')

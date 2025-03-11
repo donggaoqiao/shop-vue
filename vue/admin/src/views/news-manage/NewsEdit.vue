@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-page-header content="创建新闻" title="新闻管理" icon="" />
+    <el-page-header content="编辑新闻" title="新闻管理" @back="handleBack()" />
 
     <el-form
       ref="newsFormRef"
@@ -13,7 +13,11 @@
         <el-input v-model="newsForm.title" />
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <editor @event="handleChange" />
+        <editor
+          @event="handleChange"
+          :content="newsForm.content"
+          v-if="newsForm.content"
+        />
       </el-form-item>
 
       <el-form-item label="类别" prop="category">
@@ -36,25 +40,22 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="submitForm()">添加新闻</el-button>
+        <el-button type="primary" @click="submitForm()">更新新闻</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import editor from "@/components/editor/Editor";
 import Upload from "@/components/upload/Upload";
 import upload from "@/util/upload";
 import axios from "axios";
-import { useRouter } from "vue-router";
-// import { useStore } from "vuex";
-
-// const store = useStore();
-// console.log(store.state.userInfo.username);
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
 
 const newsFormRef = ref();
 const newsForm = reactive({
@@ -64,7 +65,6 @@ const newsForm = reactive({
   cover: "",
   file: null,
   isPublish: 0, //0未发布，1已发布
-  // username:store.state.userInfo.username
 });
 const newsFormRules = reactive({
   title: [{ required: true, message: "请输入标题", trigger: "blur" }],
@@ -100,11 +100,22 @@ const handleUploadChange = (file) => {
 const submitForm = () => {
   newsFormRef.value.validate(async (valid) => {
     if (valid) {
-      await upload("/adminapi/news/add", newsForm);
-      router.push(`/news-manage/newslist`);
+      await upload("/adminapi/news/list", newsForm);
+      router.back();
     }
   });
 };
+
+const handleBack = () => {
+  router.back();
+};
+
+//取当前页面数据
+onMounted(async () => {
+  const res = await axios.get(`/adminapi/news/list/${route.params.id}`);
+  // console.log(res.data.data[0]);
+  Object.assign(newsForm, res.data.data[0]);
+});
 </script>
 <style lang="scss" scoped>
 .demo-ruleForm {
