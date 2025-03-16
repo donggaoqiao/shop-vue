@@ -14,11 +14,11 @@ const ProductService = {
     updateList: async ({ title, introduction, detail, _id, cover, editTime }) => {
         if (cover) {
             return ProductModel.updateOne({ _id }, {
-                title, introduction, detail, editTime
+                title, introduction, detail, editTime, cover
             })
         } else {
             return ProductModel.updateOne({ _id }, {
-                title, introduction, detail, cover, editTime
+                title, introduction, detail, editTime
             })
         }
     },

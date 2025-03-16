@@ -5,7 +5,7 @@ const ProductController = {
     add: async (req, res) => {
         const { title, introduction, detail } = req.body
         const cover = req.file ? `/productuploads/${req.file.filename}` : ""
-        // console.log(cover)
+        console.log(cover)
         await ProductService.add({
             title, introduction, detail,
             cover, editTime: new Date()
@@ -28,6 +28,7 @@ const ProductController = {
     updateList: async (req, res) => {
         const { title, introduction, detail, _id } = req.body
         const cover = req.file ? `/productuploads/${req.file.filename}` : ""
+        console.log("11111111111",cover)
         await ProductService.updateList({
             _id, title, introduction, detail,
             cover, editTime: new Date()
